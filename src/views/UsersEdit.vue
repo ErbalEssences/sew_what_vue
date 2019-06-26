@@ -1,55 +1,50 @@
 <template>
-  <div class="users-show">
-    <div class="container">
-      <div class="row">
+  <div class="users-edit">
+    <h1>Edit user</h1>
 
-        <div class="col-sm-6">
-          <h1>{{ user.username }}</h1>
-          <h3>Skill Level: {{ user.skill }}</h3>
-          <h4>Total Closets: {{ user.number_of_closets }}</h4>
-          <h4>Total Patterns: {{ user.number_of_patterns }}</h4>
-          <router-link class="btn btn-warning m-1" v-bind:to=" '/users/' + user.id + '/edit' ">Edit or Delete</router-link>
+    <ul>
+      <li v-for="error in errors">
+        {{ error }}
+      </li>
+    </ul>
 
+    <form v-on:submit.prevent="submit()">
+      <div>
+        Username: <input v-model="user.username">
+      </div>
 
-          <form class="form-inline">
-            <div class="form-group mx-sm-1 mb-3">
-              <label for="inputname2" class="sr-only">Name</label>
-              <input class="form-control" v-model="new_name" placeholder="Closet Name">
-            </div>
-            <button type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="makeCloset()">Confirm Closet</button>
-          </form>
+      <div>
+        Email: <input v-model="user.email">
+      </div>
+      <div>
+        Profile Image: <input v-model="user.avatar_url">
+      </div>
+   <!--    <div>
+        Skill: <input v-model="user.skill">
+      </div> -->
 
-        </div>
-        <div class="col-sm-6">
-          <img v-bind:src="user.avatar_url" class="img-fluid show-user-img">
-        </div>
-
-          <div v-for="closet in user.closets">
-            <div class="card m-4" style="width: 18rem;">
-
-              <img class="card-img-top" v-if="closet.patterns[0]" v-bind:src="closet.patterns[0].images.main_images[0].url" alt="Closet Image">
-              <img class="card-img-top" v-else v-bind:src="closet_photo" alt="No Photo">
-              <div class="card-body">
-                <router-link class="btn btn-warning m-1" v-bind:to=" '/closets/' + closet.id ">{{closet.name}} Closet</router-link>
-
-              </div>
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle m-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{user.skill}}
+        </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <div v-for="level in skillLevels">
+              <a v-on:click="skill = level" class="dropdown-item" href="#">{{level}}</a>
             </div>
           </div>
-
       </div>
-    </div>
+  
+
+      <!-- <input type="submit" value="Update User"> -->
+      <button class="btn btn-warning m-1" v-on:click="submit()">Update User</button>
+      <button class="btn btn-warning m-1" v-on:click="destroyUser()">Delete User</button>
+
+    </form>
+
   </div>
 </template>
 
 <style>
-img.show-user-img {
-  max-width: 450px;
-  max-height: 300px;
-}
-
-.btn-my-color {
-  background-color: #3B8F98;
-}
 </style>
 
 <script>
@@ -58,8 +53,8 @@ var axios = require('axios');
 export default {
   data: function() {
     return {
-      closet_photo: "https://i.pinimg.com/236x/a3/27/9e/a3279e1539f7e72d36a614a4db096891--drawings-easy-easy-cartoon-drawings.jpg",
-      new_name: "",
+      errors: [],
+      skillLevels: ["Beginner", "Intermediate", "Experienced"],
       user: {
                username: "",
                email: "",
@@ -123,30 +118,32 @@ export default {
                           },
 
             },
-          };
-    },
+    };
+  },
   created: function() {
     axios.get("/api/users/" + this.$route.params.id ).then(response => {
       this.user = response.data;
     });
   },
   methods: {
-        makeCloset: function() {
-                    console.log("Creating the closet...");
+    submit: function() {
+      var params = {
+                     username: this.user.username,
+                     email: this.user.email,
+                     skill: this.skill,
+                     avatar_url: this.user.avatar_url
+                    };
 
-                    var params = { 
-                                    name: this.new_name
-                                 };
-
-                    axios.post("/api/closets", params).then(response => {
-                      this.$router.push(this.user = response.data );
-                    }).catch(error => {
-                      this.errors = error.response.data.errors;
-                    });
-                  }
-
-
-
+      axios.patch("/api/users/" + this.$route.params.id, params).then(response => {
+        this.$router.push("/users/" + this.$route.params.id);
+      });
+    },
+    destroyUser: function() {
+      console.log("Deleting user...");
+      axios.delete("/api/users/" + this.user.id).then(response => {
+        this.$router.push("/");
+      });
+    }
   }
 };
 </script>

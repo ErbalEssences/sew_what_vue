@@ -30,6 +30,7 @@
           <label>Password confirmation:</label>
           <input type="password" class="form-control" v-model="passwordConfirmation">
         </div>
+
           <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{skill}}
@@ -40,6 +41,7 @@
                 </div>
               </div>
           </div>
+          
         </div>
         <input type="submit" class="btn btn-secondary" value="Submit">
       </form>
@@ -65,7 +67,7 @@ export default {
   methods: {
     submit: function() {
       var params = {
-        name: this.name,
+        username: this.name,
         email: this.email,
         skill: this.skill,
         password: this.password,
