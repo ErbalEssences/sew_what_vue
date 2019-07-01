@@ -16,12 +16,15 @@
       <div>
         Email: <input v-model="user.email">
       </div>
-      <div>
+     <!--  <div>
         Profile Image: <input v-model="user.avatar_url">
       </div>
-   <!--    <div>
-        Skill: <input v-model="user.skill">
-      </div> -->
+ -->
+      <div>
+        Profile Image: <input type="file" v-on:change="setFile($event)" ref="fileInput">
+      </div>
+
+
 
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle m-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -55,6 +58,11 @@ export default {
     return {
       errors: [],
       skillLevels: ["Beginner", "Intermediate", "Experienced"],
+      username: "",
+      email: "",
+      skill: "",
+      avatar_url: "",
+      image: "",
       user: {
                username: "",
                email: "",
@@ -123,18 +131,36 @@ export default {
   created: function() {
     axios.get("/api/users/" + this.$route.params.id ).then(response => {
       this.user = response.data;
+      this.image = response.data.avatar;
+      this.username = response.data.username;
+      this.email = response.data.email;
+      this.skill = response.data.skill;
+      this.avatar_url = response.data.avatar_url;
     });
   },
   methods: {
+    setFile: function(event) {
+          if (event.target.files.length > 0 ) {
+            this.image = event.target.files[0];
+          }
+        }, 
     submit: function() {
-      var params = {
-                     username: this.user.username,
-                     email: this.user.email,
-                     skill: this.skill,
-                     avatar_url: this.user.avatar_url
-                    };
+      var formData = new FormData();
+      formData.append("username", this.username);
+      formData.append("email", this.email);
+      formData.append("skill", this.skill);
+      formData.append("avatar_url", this.avatar_url);
+      formData.append("avatar", this.image);
 
-      axios.patch("/api/users/" + this.$route.params.id, params).then(response => {
+      // var params = {
+      //                username: this.user.username,
+      //                email: this.user.email,
+      //                skill: this.skill,
+      //                avatar_url: this.user.avatar_url
+      //               };
+
+
+      axios.patch("/api/users/" + this.$route.params.id, formData).then(response => {
         this.$router.push("/users/" + this.$route.params.id);
       });
     },

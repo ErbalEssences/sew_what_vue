@@ -5,7 +5,9 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
+      <router-link class="navbar-brand" to="/patterns/" >All Patterns</router-link>
+      <router-link v-if="userId !== 0" class="navbar-brand" v-bind:to="'/users/' + userId " >User Page</router-link>
+      
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item dropdown">
@@ -19,10 +21,12 @@
             </div>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
+
+
+    <!--     <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" v-model="titleFilter">
           <button class="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
-        </form>
+        </form> -->
       </div>
     </nav>
 
@@ -38,11 +42,22 @@
 </style>
 
 <script>
-  export default {
+
+var axios = require('axios');
+export default {
     data: function() {
       return {
-        titleFilter: ""
+        titleFilter: "",
+        userId: 0
       };
-    }
+    },
+  created: function() {
+    this.userId = localStorage.getItem("userId");
+
+  },
+  // mixins: [Vue2Filters.mixin]
+
   }
 </script>
+
+

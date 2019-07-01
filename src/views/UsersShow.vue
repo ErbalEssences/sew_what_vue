@@ -8,9 +8,14 @@
           <h3>Skill Level: {{ user.skill }}</h3>
           <h4>Total Closets: {{ user.number_of_closets }}</h4>
           <h4>Total Patterns: {{ user.number_of_patterns }}</h4>
+          <div>
+            <router-link class="btn btn-warning m-1" v-bind:to=" '/closet-patterns/' ">All User Patterns</router-link>
+            <router-link class="btn btn-warning m-1" v-bind:to=" '/notes/' ">All User Notes</router-link>
+            <router-link class="btn btn-warning m-1" v-bind:to=" '/images/' ">All User Images</router-link>
+          </div>
           <router-link class="btn btn-warning m-1" v-bind:to=" '/users/' + user.id + '/edit' ">Edit or Delete</router-link>
 
-
+          <h4>Make New Closet</h4>
           <form class="form-inline">
             <div class="form-group mx-sm-1 mb-3">
               <label for="inputname2" class="sr-only">Name</label>
@@ -18,16 +23,30 @@
             </div>
             <button type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="makeCloset()">Confirm Closet</button>
           </form>
-
         </div>
+        
         <div class="col-sm-6">
-          <img v-bind:src="user.avatar_url" class="img-fluid show-user-img">
+          <img class="card-img-top" v-bind:src="user.avatar_url" alt="User Image">
         </div>
 
-          <div v-for="closet in user.closets">
+        <div>
+          Search by Name: <input v-model="nameFilter">
+        </div>
+
+        <div>
+          <button class="btn btn-warning" v-on:click="setSortAttribute('name')">
+            {{ isAscending('name') }} 
+            Sort by Name
+          </button>
+        </div>
+
+
+          <div class="col-sm-4" v-for="closet in orderBy(filterBy(user.closets, nameFilter, 'name'), sortAttribute, sortAscending)" v-bind:key="user.closets.id">
+
             <div class="card m-4" style="width: 18rem;">
 
               <img class="card-img-top" v-if="closet.patterns[0]" v-bind:src="closet.patterns[0].images.main_images[0].url" alt="Closet Image">
+              <!-- <img class="card-img-top" v-if="closet.patterns[0]" v-bind:src="closet.patterns[0].images.main_images[0].file" alt="Closet Image"> -->
               <img class="card-img-top" v-else v-bind:src="closet_photo" alt="No Photo">
               <div class="card-body">
                 <router-link class="btn btn-warning m-1" v-bind:to=" '/closets/' + closet.id ">{{closet.name}} Closet</router-link>
@@ -53,13 +72,19 @@ img.show-user-img {
 </style>
 
 <script>
+import Vue2Filters from 'vue2-filters';
 var axios = require('axios');
 
 export default {
   data: function() {
     return {
       closet_photo: "https://i.pinimg.com/236x/a3/27/9e/a3279e1539f7e72d36a614a4db096891--drawings-easy-easy-cartoon-drawings.jpg",
+      // closet_photo: "public/no_closet_image.jpg",
       new_name: "",
+      nameFilter: "",
+      sortAttribute: "name",
+      sortAscending: 1,
+      image: "",
       user: {
                username: "",
                email: "",
@@ -131,6 +156,7 @@ export default {
     });
   },
   methods: {
+
         makeCloset: function() {
                     console.log("Creating the closet...");
 
@@ -143,10 +169,23 @@ export default {
                     }).catch(error => {
                       this.errors = error.response.data.errors;
                     });
-                  }
+                  },
+        setSortAttribute: function(inputAttribute) {
+          if (this.sortAttribute === inputAttribute) {
+            this.sortAscending *= -1;
+          } else {
+            this.sortAscending = 1;
+          }
+          this.sortAttribute = inputAttribute;
+        },
 
+        isAscending: function(inputAttribute) {
+          if (this.sortAttribute === inputAttribute) {
+            return this.sortAscending === 1 ? "^" : "v";
+          }
+        },
+  },
+  mixins: [Vue2Filters.mixin]
 
-
-  }
 };
 </script>

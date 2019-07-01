@@ -16,12 +16,11 @@
         </div>
 
         <div class="form-group">
-
-
-
-
-
-
+          <div>
+            Profile Image: <input type="file" v-on:change="setFile($event)" ref="fileInput">
+          </div>
+        </div>
+        
         <div class="form-group">
           <label>Password:</label>
           <input type="password" class="form-control" v-model="password">
@@ -42,7 +41,6 @@
               </div>
           </div>
           
-        </div>
         <input type="submit" class="btn btn-secondary" value="Submit">
       </form>
     </div>
@@ -58,6 +56,7 @@ export default {
       name: "",
       email: "",
       skill: "Skill Level",
+      image: "",
       password: "",
       passwordConfirmation: "",
       skillLevels: ["Beginner", "Intermediate", "Experienced"],
@@ -71,7 +70,8 @@ export default {
         email: this.email,
         skill: this.skill,
         password: this.password,
-        password_confirmation: this.passwordConfirmation
+        password_confirmation: this.passwordConfirmation,
+        admin: false
       };
       axios
         .post("/api/users", params)

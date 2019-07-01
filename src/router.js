@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
+import Index from './views/Index.vue';
 
 import Signup from "./views/Signup.vue";
 import Login from "./views/Login.vue";
@@ -10,11 +10,19 @@ import Logout from "./views/Logout.vue";
 import UsersShow from './views/UsersShow.vue';
 import UsersEdit from './views/UsersEdit.vue';
 
-// import ClosetsIndex from './views/ClosetsIndex.vue';
+import ClosetsShow from './views/ClosetsShow.vue';
 
-// import ClosetsNew from './views/ClosetsNew.vue';
-// import ClosetsShow from './views/ClosetsShow.vue';
-// import ClosetsEdit from './views/ClosetsEdit.vue';
+import ClosetPatternsIndex from './views/ClosetPatternsIndex.vue';
+
+import PatternsIndex from './views/PatternsIndex.vue';
+import PatternsShow from './views/PatternsShow.vue';
+
+import NotesIndex from './views/NotesIndex.vue';
+import ImagesIndex from './views/ImagesIndex.vue';
+import TagsIndex from './views/TagsIndex.vue';
+
+
+
 
 
 
@@ -24,7 +32,7 @@ export default new Router({
   mode: 'history',
   hash: false,
   routes: [
-    { path: '/', name: 'home', component: Home },
+    { path: '/', name: 'index', component: Index },
 
     { path: "/signup", name: "signup", component: Signup },
     { path: "/login", name: "login", component: Login },
@@ -32,6 +40,18 @@ export default new Router({
 
     // { path: '/users/:id', name: 'users-index', component: UsersIndex },
     { path: '/users/:id', name: 'users-show', component: UsersShow },
-    { path: '/users/:id/edit', name: 'users-edit', component: UsersEdit }
+    { path: '/users/:id/edit', name: 'users-edit', component: UsersEdit },
+
+    { path: '/closets/:id', name: 'closets-show', component: ClosetsShow },
+
+    { path: '/closet-patterns', name: 'closet-patterns-index', component: ClosetPatternsIndex },
+
+    { path: '/patterns', name: 'patterns-index', component: PatternsIndex },
+    { path: '/patterns/:id', name: 'patterns-show', component: PatternsShow },
+
+    { path: '/notes', name: 'notes-index', component: NotesIndex },
+    { path: '/images', name: 'images-index', component: ImagesIndex },
+    { path: '/tags', name: 'tags-index', component: TagsIndex },
+
   ]
 })  
