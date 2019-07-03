@@ -1,13 +1,6 @@
 <template>
   <div class="pattern-index">
-
-      <div>
-        Search by Name: <input v-model="nameFilter">
-      </div>
-      <div>
-        Search by Display Name: <input v-model="displayNameFilter">
-      </div>
-
+<!-- 
       <div>
         <button class="btn btn-warning m-1" v-on:click="setSortAttribute('name')">
           {{ isAscending('name') }} 
@@ -20,21 +13,18 @@
           Sort by Price
         </button>
       </div>
-      
+ -->
 
-
-
-
-        <div class="col-sm-4" v-for="pattern in orderBy(filterBy(patterns, nameFilter, 'name'), sortAttribute, sortAscending)" v-bind:key="pattern.id">
+       <!--  <div class="col-sm-4" v-for="pattern in orderBy(filterBy(patterns, nameFilter, 'name'), sortAttribute, sortAscending)" v-bind:key="pattern.id">
 
 
           <div class="card m-4" style="width: 18rem;">
 
-            <img class="card-img-top" v-bind:src="pattern.images.main_images[0].url" alt="Pattern Image">
+            <img class="card-img-top" v-bind:src="pattern.images.main_images[0].url" alt="Pattern Image"> -->
             <!-- <img v-bind:src="pattern.images.main_images[0].file" class="img-fluid show-user-img"> -->
       
 
-
+<!-- 
             <h2>{{pattern.name}}</h2>
             <h2>Brand</h2>
             <h3>{{pattern.display_name}}</h3>
@@ -72,7 +62,7 @@
 
           </div>
 
-        </div>
+        </div> -->
 
 <!--   </div>
 </template> -->
@@ -108,6 +98,11 @@
                                 <option >Reverse</option>
                                 <option >Price Low to High</option>
                                 <option >Price High to Low</option>
+              <!--                   <option v-on:click="sorted_name = 'desc'">Default</option>
+                                <option v-on:click="sorted_name = 'asc'">Reverse</option>
+                                <option v-on:click="sort_price = 'desc'">Price Low to High</option>
+                                <option v-on:click="sort_price = 'asc'">Price High to Low</option> -->
+
 <!--                                 <option>Popularity</option>
                                 <option>Newness</option>
                                 <option>Rating</option> -->
@@ -117,20 +112,19 @@
                 </p>
                 <ul class="row shop list-unstyled" id="grid">
 
-
-                    <!-- <div v-for="pattern in orderBy(filterBy(patterns, nameFilter, 'name'), sortAttribute, sortAscending)" v-bind:key="pattern.id"> -->
                     <div v-for="pattern in patterns">
 
                     <!-- product -->
                       <li class="col-xs-6 product m-product" data-groups='["bedroom"]'>
                           <div class="img-bg-color primary">
-                              <h5 class="product-price">${{pattern.price}}</h5>
+                              <h5 class="product-price">{{pattern.price}}</h5>
                               <a v-bind:href="'/patterns/' + pattern.id" class="product-link"></a>
                               <!-- / product-link -->
-                              <img v-bind:src="pattern.images.main_images[0].url" alt="">
+                              <img  v-if="pattern.images.main_images[0]" v-bind:src="pattern.images.main_images[0].url" alt="">
+                              <img  v-else v-bind:src="closet_photo" alt="No Photo">
+
                               <!-- / product-image -->
-<!-- v-bind:to=" '/patterns/' + pattern.id"
-v-bind:href="'/patterns/' + pattern.id"  -->
+
                               <!-- product-hover-tools -->
                               <div class="product-hover-tools">
                                   <a v-bind:href="'/patterns/' + pattern.id" class="view-btn" data-toggle="tooltip" title="View Product">
@@ -151,9 +145,6 @@ v-bind:href="'/patterns/' + pattern.id"  -->
                       </li>
                     </div>
                       <!-- / product -->
-
-
-
 
                     <!-- sizer -->
                     <li class="col-xs-6 shuffle_sizer"></li>
@@ -193,121 +184,105 @@ v-bind:href="'/patterns/' + pattern.id"  -->
                     <h5 class="widget-title">Name Filter</h5>
 
                     <div>
-                      Search by Name: <input v-model="nameFilter">
+                      Search by Name <input v-model="nameFilter">
                     </div>
                     <div>
-                      Search by Display Name: <input v-model="displayNameFilter">
+                      Search by Display Name <input v-model="displayNameFilter">
                     </div>
 
                     <button  v-if="userId !== 0" type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="refreshCreated()">Confirm Search</button>
 
+                </div>
+                  <h5 class="widget-title">Brand Filter</h5>
+                  <div v-for="tag in tags.brands">
+                    <p class="filter-item">
+                      <input type="checkbox" v-bind:value="tag.name" v-model="tagList">
+                      <label>{{tag.name}}</label>
+                    </p>
+                  </div>
+<span>Checked names: {{ tagList }}</span>
 
-
-
-
+                <div class="price-filter widget">
+                  <h5 class="widget-title">Main Filter</h5>
+                  <div v-for="tag in tags.main">
+                    <p class="filter-item">
+                      <input type="checkbox" v-bind:value="tag.name" v-model="tagList">
+                      <label>{{tag.name}}</label>
+                    </p>
+                  </div>
                 </div>
 
                 <div class="price-filter widget">
-                    <h5 class="widget-title">Brand Filter</h5>
-
-                    <p class="filter-item">
-                      <input class="form-check-input" type="checkbox" v-on:click="tag_list << 'Mccalls'" value="true" id="defaultCheck1">
-                      <label class="form-check-label" for="defaultCheck1">
-                        Mccalls
-                      </label>
-                    </p>
-
-                    <p class="filter-item">
-                      <input class="form-check-input" type="checkbox" v-on:click="tag_list << 'Butterick'" value="true" id="defaultCheck1">
-                      <label class="form-check-label" for="defaultCheck1">
-                        Butterick
-                      </label>
-                    </p>
-
-                    <p class="filter-item">
-                      <input class="form-check-input" type="checkbox" v-on:click="tag_list << 'Vogue'" value="true" id="defaultCheck1">
-                      <label class="form-check-label" for="defaultCheck1">
-                        Vogue
-                      </label>
-                    </p>
-                </div>
-
-                <div class="price-filter widget">
-                    <h5 class="widget-title">Main Filter</h5>
-
-                    <p class="filter-item">
-                      <input class="form-check-input" type="checkbox" v-model="tag_list" value="true" id="defaultCheck1">
-                      <label class="form-check-label" for="defaultCheck1">
-                        Public
-                      </label>
-                    </p>
-
-                </div>
-                <!-- / price-filter widget -->
-
-                <!-- color-filter widget -->
-          <!--       <div class="color-filter widget">
-                    <h5 class="widget-title">COLOR FILTER</h5>
-
-                    <p class="color filter-item">
-                        <a href="#"><span class="color-red"></span> Red</a>
-                    </p><
-
-                    <p class="color filter-item">
-                        <a href="#"><span class="color-green"></span> Green</a>
-                    </p><
-
-                    <p class="color filter-item">
-                        <a href="#"><span class="color-blue"></span> Blue</a>
-                    </p><
-
-                    <p class="color filter-item">
-                        <a href="#"><span class="color-black"></span> Black</a>
-                    </p><
-
-                    <p class="color filter-item">
-                        <a href="#"><span class="color-white"></span> White</a>
-                    </p><
-
-                </div> -->
-                <!-- / color-filter widget -->
-
-                <!-- categries widget -->
-                <div class="categories-sidebar-widget widget no-border">
-                    <h5 class="widget-title">CATEGORIES</h5>
-
-                    <p class="product-category">
-                        <a href="#">Fashion</a>
-                        <span class="pull-right">(16)</span>
-                    </p><!-- / category -->
-
-                    <p class="product-category">
-                        <a href="#">Furniture</a>
-                        <span class="pull-right">(9)</span>
-                    </p><!-- / category -->
-
-                    <p class="product-category">
-                        <a href="#">Tech</a>
-                        <span class="pull-right">(11)</span>
-                    </p><!-- / category -->
-
-                </div>
-                <!-- / categories-sidebar-widget -->
-
-                <!-- tags-sidebar-widget -->
-                <div class="tags-sidebar-widget widget">
-                    <div class="widget-title">
-                        <h5 class="widget-title">PRODUCT TAGS</h5>
+                  <h5 class="widget-title">Subcategory Filter</h5>
+                    <div>
+                      Search by Subcategory <input v-model="tagSubFilter">
                     </div>
-                    <p>
-                        <a href="#" class="btn btn-xs btn-primary-filled">Fashion</a>
-                        <a href="#" class="btn btn-xs btn-primary-filled">Furniture</a>
-                        <a href="#" class="btn btn-xs btn-primary-filled">Tech</a>
-                        <a href="#" class="btn btn-xs btn-primary-filled">Webshop</a>
-                        <a href="#" class="btn btn-xs btn-primary-filled">Online Store</a>
+                  <div v-for="tag in filterBy(tags.subcategory, tagSubFilter, 'name')">
+                    <p class="filter-item">
+                      <input type="checkbox" v-bind:value="tag.name" v-model="tagList">
+                      <label>{{tag.name}}</label>
                     </p>
+                  </div>
                 </div>
-                <!-- / tags-sidebar-widget -->
+
+<!--                 <div class="price-filter widget">
+                    <h5 class="widget-title">Designers Filter</h5>
+                    <div v-for="tag in tags.designers">
+                      <p class="filter-item">
+                        <input type="checkbox" v-bind:value="tag.name" v-model="tagList">
+                        <label>{{tag.name}}</label>
+                      </p>
+                    </div>
+                </div>                
+
+                <div class="price-filter widget">
+                    <h5 class="widget-title">Collections Filter</h5>
+                    <div v-for="tag in tags.collections">
+                      <p class="filter-item">
+                        <input type="checkbox" v-bind:value="tag.name" v-model="tagList">
+                        <label>{{tag.name}}</label>
+                      </p>
+                    </div>
+                </div> -->
+
+                <div class="price-filter widget">
+                  <h5 class="widget-title">Difficulty Filter</h5>
+                  <div v-for="tag in tags.difficulty">
+                    <p class="filter-item">
+                      <input type="checkbox" v-bind:value="tag.name" v-model="tagList">
+                      <label>{{tag.name}}</label>
+                    </p>
+                  </div>
+                </div>
+
+                <div class="price-filter widget">
+                  <h5 class="widget-title">Out of Print Filter</h5>
+                    <input type="radio" id="true" value="true" v-model="out_of_print">
+                    <label for="one">Only Show In Print</label>
+                    <br>
+                    <input type="radio" id="false" value="false" v-model="out_of_print">
+                    <label for="two">Only Show out of Print</label>
+                    <br>
+                    <input type="radio" id="null" value="null" v-model="out_of_print">
+                    <label for="two">Show All</label>
+                    <br>
+                </div>
+
+
+                <div class="price-filter widget">
+                  <h5 class="widget-title">Details Filter</h5>
+                    <div>
+                      Search by Details <input v-model="tagNameFilter">
+                    </div>
+                  <div v-for="tag in filterBy(tags.details, tagNameFilter, 'name')">
+                  <!-- <div v-for="tag in tags.details"> -->
+                    <p class="filter-item">
+                      <input type="checkbox" v-bind:value="tag.name" v-model="tagList">
+                      <label>{{tag.name}}</label>
+                    </p>
+                  </div>
+                  <button  v-if="userId !== 0" type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="refreshCreated()">Confirm Search</button>
+                </div>
 
             </div><!-- / sidebar-area -->
 
@@ -317,10 +292,6 @@ v-bind:href="'/patterns/' + pattern.id"  -->
 <!-- / shop right sidebar -->
   </div>
 </template>
-
-
-
-
 
 
 
@@ -334,16 +305,38 @@ var axios = require('axios');
 export default {
   data: function() {
     return {
-      patterns: [],
+      closet_photo: "/images/no_closet_image.jpg",
+      patterns: [
+        {
+          images: {
+            main_images: [
+              {
+                url: ""
+              }
+            ]
+          }
+        }
+      ],
       user: {},
       new_name: "",
       userId: 0,
       nameFilter: null,
+      tagSubFilter: null,
+      tagNameFilter: null,
       displayNameFilter: null,
       out_of_print: null,
       sortAttribute: "name",
-      tag_list: [],
-      sortAscending: 1
+      tagList: [],
+      // sortAscending: 1,
+      // sorted_price: null,
+      // sorted_name: "asc",
+      tags: {
+              "brand": [],
+              "designer": [],
+              "collections": [],
+              "details": [],
+              "difficulty": []
+            }
     };
   },
   created: function() {
@@ -353,7 +346,12 @@ export default {
                       this.patterns = response.data;
                     });
                     axios.get("/api/users/" + this.userId ).then(response => {
-                      this.user = response.data;
+                      this.$router.push(
+                      this.user = response.data);
+                    });
+                    axios.get("/api/tags/by_category").then(response => {
+                      this.$router.push(
+                      this.tags = response.data);
                     });
   },
   methods: { 
@@ -363,18 +361,22 @@ export default {
 
                     axios.get("/api/patterns", {
                                 params:{
-                                    name_search: this.nameFilter,
-                                    display_name_search: this.displayNameFilter,
-                                    tag_name_search: this.tag_list,
-                                    out_of_print_search: this.out_of_print
+                                    name: this.nameFilter,
+                                    display_name: this.displayNameFilter,
+                                    tags: this.tagList,
+                                    out_of_print: this.out_of_print,
+                                    sorted_price: this.sorted_price,
+                                    sorted_name: this.sorted_name
                                                 }
                                       })
                     .then(response => {
                       this.patterns = response.data;
                     });
 
+                    axios.get("/api/users/" + this.userId ).then(response => {
+                      this.user = response.data;
+                    });
                   },
-
 
         makeCloset: function(pattern) {
                     console.log("Creating the closet...");
@@ -408,6 +410,9 @@ export default {
                     });
                   },
 
+
+
+// this.closet.push.(response.data)
         // setSortAttribute: function(inputAttribute) {
         //   if (this.sortAttribute === inputAttribute) {
         //     this.sortAscending *= -1;
@@ -422,11 +427,6 @@ export default {
           this.sortAttribute = inputAttribute;
         },
 
-        isAscending: function(inputAttribute) {
-          if (this.sortAttribute === inputAttribute) {
-            return this.sortAscending === 1 ? "^" : "v";
-          }
-        },
   },
   mixins: [Vue2Filters.mixin]
 };
