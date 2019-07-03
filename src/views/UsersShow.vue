@@ -26,7 +26,9 @@
         </div>
         
         <div class="col-sm-6">
-          <img class="card-img-top" v-bind:src="user.avatar_url" alt="User Image">
+          <!-- <img class="card-img-top" v-bind:src="user.avatar_url" alt="User Image"> -->
+          <img v-bind:src="user.avatar" class="img-fluid show-user-img">
+
         </div>
 
         <div>
@@ -78,8 +80,7 @@ var axios = require('axios');
 export default {
   data: function() {
     return {
-      closet_photo: "https://i.pinimg.com/236x/a3/27/9e/a3279e1539f7e72d36a614a4db096891--drawings-easy-easy-cartoon-drawings.jpg",
-      // closet_photo: "public/no_closet_image.jpg",
+      closet_photo: "/images/no_closet_image.jpg",
       new_name: "",
       nameFilter: "",
       sortAttribute: "name",

@@ -71,10 +71,14 @@ export default {
       new_name: "",
       nameFilter: "",
       sortAttribute: "name",
-      sortAscending: 1
+      sortAscending: 1,
+      userId: 0
+
     };
   },
   created: function() {
+    this.userId = localStorage.getItem("userId");
+
     axios.get("/api/closets/" + this.$route.params.id ).then(response => {
       this.closet = response.data;
     });
@@ -83,14 +87,14 @@ export default {
     destroyCloset: function(remove_id) {
       console.log("Removing Closet...");
       axios.delete("/api/closets/" + this.closet.id).then(remove_id => {
-        this.$router.push("/");
+        this.$router.push("/api/users/" + userId);
       });
     },
 
     destroyClosetPattern: function(remove_id) {
       console.log("Removing Pattern From Closet...");
       axios.delete("/api/closet_patterns/" + remove_id).then(response => {
-                      this.$router.push("/");
+      this.closet = response.data;
       });
     },
     editCloset: function() {
