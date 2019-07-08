@@ -16,7 +16,6 @@
           <div class="card m-4" style="width: 18rem;">
 
             <img class="card-img-top" v-bind:src="image.url" alt="Pattern Image">
-            <!-- <img v-bind:src="image.file" class="img-fluid show-user-img"> -->
             
             <h2>{{image.pattern_name}}</h2>
 
@@ -27,6 +26,18 @@
 
           </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
   </div>
 </template>

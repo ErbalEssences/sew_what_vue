@@ -42,7 +42,7 @@
                         <ul class="dropdown-menu animated zoomIn fast">
                         <li><a href="shop.html"><span>BUTTERICK</span></a></li>
                         <li><a href="shop-right.html"><span>MCCALLS</span></a></li>
-                        <li><a href="shop-left.html"><span>VOUGE</span></a></li>
+                        <li><a href="shop-left.html"><span>VOGUE</span></a></li>
                     </ul>
                     </li>
                         <!-- <li><a href="contact.html"><span>USER PAGE</span></a></li> -->

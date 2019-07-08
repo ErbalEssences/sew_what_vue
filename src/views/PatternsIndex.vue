@@ -87,23 +87,28 @@
 <!-- shop right-sidebar -->
 <section id="shop" class="space-top-30">
     <div class="container">
+      <ul class="pagination">
+        <template v-for="number in patterns[0].numbers">
+          <li v-if="number == '...' && number != pageNumber" class="disabled"><a>{{number}}</a></li>
+          <li v-if="number == pageNumber" class="active"><a>{{number}}</a></li>
+          <li v-if="number != '...' && number != pageNumber" v-on:click="sendNumber(number)"><a>{{number}}</a></li>
+        </template>
+      </ul>
         <div class="row">
+    
 
             <div class="col-sm-8 col-md-9 content-area">
-                <p class="shop-results space-left">Showing <strong>1-8</strong> of <strong>36</strong> items. 
+                <p class="shop-results space-left">Showing <strong>{{(offsetNumber + 1)}}-{{(offsetNumber + 30)}}</strong> of <strong>{{patterns[0].count}}</strong> items. 
                     <span class="pull-right space-right">
-                        <select class="selectpicker">
+                        <select v-on:change="reloadPatterns()" class="selectpicker" v-model="sortBy">
                             <optgroup label="Sort By:">
-                                <option >Default</option>
-                                <option >Reverse</option>
-                                <option >Price Low to High</option>
-                                <option >Price High to Low</option>
-              <!--                   <option v-on:click="sorted_name = 'desc'">Default</option>
-                                <option v-on:click="sorted_name = 'asc'">Reverse</option>
-                                <option v-on:click="sort_price = 'desc'">Price Low to High</option>
-                                <option v-on:click="sort_price = 'asc'">Price High to Low</option> -->
 
-<!--                                 <option>Popularity</option>
+                                <option value="sort_name=asc" >Default</option>
+                                <option value="sort_name=desc" >Reverse</option>
+                                <option value="sort_price=asc" >Price Low to High</option>
+                                <option value="sort_price=desc" >Price High to Low</option>
+
+<!--                            <option>Popularity</option>
                                 <option>Newness</option>
                                 <option>Rating</option> -->
                             </optgroup>
@@ -117,7 +122,8 @@
                     <!-- product -->
                       <li class="col-xs-6 product m-product" data-groups='["bedroom"]'>
                           <div class="img-bg-color primary">
-                              <h5 class="product-price">{{pattern.price}}</h5>
+                              <h5 v-if="pattern.price" class="product-price">{{pattern.price}}</h5>
+                              <h5 v-else class="product-price">Out of Print</h5>
                               <a v-bind:href="'/patterns/' + pattern.id" class="product-link"></a>
                               <!-- / product-link -->
                               <img  v-if="pattern.images.main_images[0]" v-bind:src="pattern.images.main_images[0].url" alt="">
@@ -134,7 +140,6 @@
                                       <i class="lnr lnr-cart"></i>
                                   </a>
                               </div><!-- / product-hover-tools -->
-
                               <!-- product-details -->
                               <div class="product-details">
                                   <h5 class="product-title">{{pattern.name}}</h5>
@@ -145,39 +150,115 @@
                       </li>
                     </div>
                       <!-- / product -->
-
                     <!-- sizer -->
                     <li class="col-xs-6 shuffle_sizer"></li>
                     <!-- / sizer -->
-
                 </ul> <!-- / products -->
 
-                <div class="text-center more-button space-top-30">
+
+<!--  class="active" -->
+<!-- class="disabled" -->
+                <ul class="pagination">
+                  <template v-for="number in patterns[0].numbers">
+                    <li v-if="number == '...' && number != pageNumber" class="disabled"><a>{{number}}</a></li>
+                    <li v-if="number == pageNumber" class="active"><a>{{number}}</a></li>
+                    <li v-if="number != '...' && number != pageNumber" v-on:click="sendNumber(number)"><a>{{number}}</a></li>
+                  </template>
+                </ul>
+
+<!--                 <div class="text-center more-button space-top-30">
                     <a href="#x" class="btn btn-default-filled"><i class="lnr lnr-sync"></i><span>LOAD MORE</span></a>
-                </div>
+                </div> -->
 
             </div><!-- / content-area -->
 
+
+
             <div class="col-sm-4 col-md-3 sidebar-area">
 
-                <!-- filter-by-price widget -->
-                <div class="widget">
+                  <div class="widget">
                     <h5 class="widget-title">FILTER BY PRICE</h5>
+                  <div id="range-slider" class="noUi-target noUi-rtl noUi-horizontal">
+                  </div><!-- / range-slider -->
 
-                    <div id="range-slider" class="noUi-target noUi-rtl noUi-horizontal">
-                    </div><!-- / range-slider -->
+                  <div class="range-filter">
+                      <div class="column filter-button">
+                      </div><!-- / filter-button -->
+                  <div class=" column range-values">
+                      <p>$<span class="value" id="range-slider-value-min"></span> - $<span class="value" id="range-slider-value-max"></span></p>
+                  </div><!-- / range-values -->
+              </div><!-- / range-filter -->
+              <!-- / filter-by-price widget -->
+          </div>
 
-                    <div class="range-filter">
-                        <div class="column filter-button">
-                            <button type="submit" class="btn btn-xs btn-default-filled btn-rounded">FILTER</button>
-                        </div><!-- / filter-button -->
-                        <div class=" column range-values">
-                            <p>$<span class="value" id="range-slider-value-min"></span> - $<span class="value" id="range-slider-value-max"></span></p>
-                        </div>     <!-- / range-values -->
-                    </div><!-- / range-filter -->
-                    <!-- / filter-by-price widget -->
-                </div>
-                <!-- / widget -->
+<!-- <template>
+  <v-card flat color="transparent">
+    <v-subheader>Min and max default slider</v-subheader>
+
+    <v-card-text>
+      <v-layout row>
+        <v-flex class="pr-3">
+          <v-slider
+            v-model="slider"
+            :max="max"
+            :min="min"
+          ></v-slider>
+        </v-flex>
+
+        <v-flex shrink style="width: 60px">
+          <v-text-field
+            v-model="slider"
+            class="mt-0"
+            hide-details
+            single-line
+            type="number"
+          ></v-text-field>
+        </v-flex>
+      </v-layout>
+    </v-card-text>
+
+    <v-subheader>Min and max range slider</v-subheader>
+
+    <v-card-text>
+      <v-layout row>
+        <v-flex
+          shrink
+          style="width: 60px"
+        >
+          <v-text-field
+            v-model="range[0]"
+            class="mt-0"
+            hide-details
+            single-line
+            type="number"
+          ></v-text-field>
+        </v-flex>
+        <v-flex class="px-3">
+          <v-range-slider
+            v-model="range"
+            :max="max"
+            :min="min"
+          ></v-range-slider>
+        </v-flex>
+        <v-flex
+          shrink
+          style="width: 60px"
+        >
+          <v-text-field
+            v-model="range[1]"
+            class="mt-0"
+            hide-details
+            single-line
+            type="number"
+          ></v-text-field>
+        </v-flex>
+      </v-layout>
+    </v-card-text>
+  </v-card>
+</template> -->
+
+
+
 
                 <!-- price-filter widget -->
                 <div class="price-filter widget">
@@ -190,9 +271,23 @@
                       Search by Display Name <input v-model="displayNameFilter">
                     </div>
 
-                    <button  v-if="userId !== 0" type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="refreshCreated()">Confirm Search</button>
+                    <button type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="reloadPatterns()">Confirm Search</button>
 
                 </div>
+
+                <div class="price-filter widget">
+                  <h5 class="widget-title">Out of Print Filter</h5>
+                    <input v-on:change="reloadPatterns()" type="radio" id="null" value="null" v-model="out_of_print">
+                    <label for="two">Show All</label>
+                    <br>
+                    <input v-on:change="reloadPatterns()" type="radio" id="true" value="false" v-model="out_of_print">
+                    <label for="two">Only Show In Print</label>
+                    <br>
+                    <input v-on:change="reloadPatterns()" type="radio" id="false" value="true" v-model="out_of_print">
+                    <label for="one">Only Show Out of Print</label>
+                    <br>
+                </div>
+
                   <h5 class="widget-title">Brand Filter</h5>
                   <div v-for="tag in tags.brands">
                     <p class="filter-item">
@@ -200,7 +295,6 @@
                       <label>{{tag.name}}</label>
                     </p>
                   </div>
-<span>Checked names: {{ tagList }}</span>
 
                 <div class="price-filter widget">
                   <h5 class="widget-title">Main Filter</h5>
@@ -256,20 +350,6 @@
                 </div>
 
                 <div class="price-filter widget">
-                  <h5 class="widget-title">Out of Print Filter</h5>
-                    <input type="radio" id="true" value="true" v-model="out_of_print">
-                    <label for="one">Only Show In Print</label>
-                    <br>
-                    <input type="radio" id="false" value="false" v-model="out_of_print">
-                    <label for="two">Only Show out of Print</label>
-                    <br>
-                    <input type="radio" id="null" value="null" v-model="out_of_print">
-                    <label for="two">Show All</label>
-                    <br>
-                </div>
-
-
-                <div class="price-filter widget">
                   <h5 class="widget-title">Details Filter</h5>
                     <div>
                       Search by Details <input v-model="tagNameFilter">
@@ -281,7 +361,7 @@
                       <label>{{tag.name}}</label>
                     </p>
                   </div>
-                  <button  v-if="userId !== 0" type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="refreshCreated()">Confirm Search</button>
+                  <button  v-if="userId !== 0" type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="reloadPatterns()">Confirm Search</button>
                 </div>
 
             </div><!-- / sidebar-area -->
@@ -318,6 +398,9 @@ export default {
         }
       ],
       user: {},
+      // firstValue: 1,
+      // lastValue: 30,
+      sortBy: "sort_name=asc",
       new_name: "",
       userId: 0,
       nameFilter: null,
@@ -325,11 +408,12 @@ export default {
       tagNameFilter: null,
       displayNameFilter: null,
       out_of_print: null,
-      sortAttribute: "name",
       tagList: [],
-      // sortAscending: 1,
-      // sorted_price: null,
-      // sorted_name: "asc",
+      pageNumber: 1,
+      offsetNumber: 0,
+
+      priceLow: null,
+      priceHigh: null,
       tags: {
               "brand": [],
               "designer": [],
@@ -342,7 +426,7 @@ export default {
   created: function() {
                     this.userId = localStorage.getItem("userId");
 
-                    axios.get("/api/patterns" ).then(response => {
+                    axios.get("/api/patterns").then(response => {
                       this.patterns = response.data;
                     });
                     axios.get("/api/users/" + this.userId ).then(response => {
@@ -355,26 +439,32 @@ export default {
                     });
   },
   methods: { 
-      refreshCreated: function() {
+      reloadPatterns: function() {
 
                     console.log("Creating search...");
-
-                    axios.get("/api/patterns", {
+                    console.log(this.tagList);
+                    if (this.priceLow === 0) {
+                      var priceLow = null;
+                      var priceHigh = null;
+                    }
+                    else {
+                      var priceLow = this.priceLow;
+                      var priceHigh = this.priceHigh;                     
+                    }
+                    axios.get("/api/patterns?" + this.sortBy, {
                                 params:{
                                     name: this.nameFilter,
                                     display_name: this.displayNameFilter,
                                     tags: this.tagList,
                                     out_of_print: this.out_of_print,
-                                    sorted_price: this.sorted_price,
-                                    sorted_name: this.sorted_name
+                                    price_low: priceLow,
+                                    price_high: priceHigh,
+                                    offset: this.offsetNumber,
+                                    page: this.pageNumber
                                                 }
                                       })
                     .then(response => {
                       this.patterns = response.data;
-                    });
-
-                    axios.get("/api/users/" + this.userId ).then(response => {
-                      this.user = response.data;
                     });
                   },
 
@@ -410,6 +500,13 @@ export default {
                     });
                   },
 
+        sendNumber: function(input_number) {  
+                    this.pageNumber = input_number
+                    this.offsetNumber = ((input_number - 1) * 30);
+                    console.log(input_number);
+
+                    this.reloadPatterns();
+                  },
 
 
 // this.closet.push.(response.data)
@@ -422,10 +519,34 @@ export default {
         //   this.sortAttribute = inputAttribute;
         // },
 
-        setSortAttribute: function(inputAttribute, sortNumber) {
-          this.sortAscending = sortNumber;
-          this.sortAttribute = inputAttribute;
-        },
+        // setSort: function() {
+        //   axios.get("/api/patterns?" + this.sortBy ).then(response => {
+        //     this.patterns = response.data;
+        //   });
+        // },
+
+  },
+  mounted: function() {
+    var limitSlider = document.getElementById('range-slider');
+
+    noUiSlider.create(limitSlider, {
+        start: [ 0, 50 ],
+        limit: 50,
+        behaviour: 'tap-drag',
+        connect: true,
+        range: {
+            'min': 0,
+            'max': 50
+        }
+    });
+
+    var limitFieldMin = document.getElementById('range-slider-value-min');
+    var limitFieldMax = document.getElementById('range-slider-value-max');
+
+    limitSlider.noUiSlider.on('update', function( values, handle ){
+        (handle ? limitFieldMax : limitFieldMin).innerHTML = values[handle];
+    });
+
 
   },
   mixins: [Vue2Filters.mixin]
