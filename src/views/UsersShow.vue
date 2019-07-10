@@ -9,7 +9,10 @@
                 <img src="images/account-img.jpg" alt="">
                 <p><router-link class="btn btn-sm btn-primary btn-rounded m-1" v-bind:to=" '/closet-patterns/' ">All User Patterns</router-link></p>
                 <p><router-link class="btn btn-sm btn-primary btn-rounded m-1" v-bind:to=" '/notes/' ">All User Notes</router-link></p>
-                <p><router-link class="btn btn-sm btn-primary btn-rounded m-1" v-bind:to=" '/images/' ">All User Images</router-link></p>
+                <!-- <p><router-link class="btn btn-sm btn-primary btn-rounded m-1" v-bind:to=" '/images/' ">All User Images</router-link></p> -->
+
+
+                
             </div> <!-- / account-sidebar -->
 
             <div class="col-sm-10 account-info">
@@ -17,11 +20,11 @@
                     <h4>PERSONAL INFO <span class="pull-right"><a v-bind:href=" '/users/' + user.id + '/edit' " class="btn btn-sm btn-primary btn-rounded no-margin"><i class="lnr lnr-pencil"></i><span>Edit or Delete</span></a></span></h4>
                     <div class="row">
 
-                        <div class="col-xs-6 col-sm-4 col-md-2">
+                        <div class="col-xs-6 col-sm-4 col-md-7">
                             <img v-bind:src="user.avatar" alt="">
                         </div>
 
-                        <div class="col-xs-6 col-sm-8 col-md-10">
+                        <div class="col-xs-6 col-sm-8 col-md-5">
                             <p>Username: <span>{{user.username}}</span></p>
                             <p>Email: <span>{{user.email}}</span></p>
                             <p>Skill Level: <span>{{ user.skill }}</span></p>
@@ -41,15 +44,6 @@
 
 
 
-
-
-
-
-
-
-<!-- ___________________________________________________________________________________________________ -->
-<!-- ___________________________________________________________________________________________________ -->
-<!-- ___________________________________________________________________________________________________ -->
 <!-- shop right-sidebar -->
 <section id="shop" class="space-top-30">
     <div class="container">
@@ -63,7 +57,7 @@
                     
 
                     <!-- product -->
-                      <li class="col-xs-6 product m-product" data-groups='["bedroom"]'>
+                      <li class="col-xs-6 product m-product">
                           <div class="img-bg-color primary">
                               <h5 class="product-price">{{closet.name}}</h5>
                               <a v-bind:href="'/closets/' + closet.id" class="product-link"></a>
@@ -79,7 +73,7 @@
                                       <i class="lnr lnr-eye"></i>
                                   </a>
                                   <a href="shopping-cart.html" class="cart-btn" data-toggle="tooltip" title="Add to Cart">
-                                      <i class="lnr lnr-cart"></i>
+                                      <i class="lnr lnr-trash"></i>
                                   </a>
                               </div><!-- / product-hover-tools -->
 
@@ -366,13 +360,6 @@ export default {
 
         isAscending: function(inputAttribute) {
           if (this.sortAttribute === inputAttribute) {
-            // 'glyphicon glyphicon-download'
-            // 'glyphicon glyphicon-upload'
-            // <i class="lnr lnr-arrow-up-circle">
-
-
-            // return this.sortAscending === 1 ? "/public/images/up_arrow.png" : "/public/images/down_arrow.png";
-            // return this.sortAscending === 1 ? 'glyphicon glyphicon-download' : 'glyphicon glyphicon-upload';
             return this.sortAscending === 1 ? "lnr lnr-arrow-up-circle" : "lnr lnr-arrow-down-circle";
           }
         },

@@ -1,42 +1,47 @@
 <template>
   <div class="notes-show">
-        <div v-for="note in notes">
-          <div class="card m-4" style="width: 18rem;">
-
-            <img class="card-img-top" v-bind:src="note.image" alt="Pattern Image">
-            <h2>{{note.pattern_name}}</h2>
 
 
-        
 
 
-        <form  v-if="userId !== 0"  class="form-inline">
 
-          <div v-if="userId !== 0" class="form-group">
-            <textarea v-if="userId !== 0" class="form-control" id="exampleFormControlTextarea1" v-model="note.body" placeholder="New Note" rows="3"></textarea>
-          </div>
 
-          <div>
+<div id="shopping-cart">
+    <div class="container">
+        <!-- shopping cart table -->
+        <table class="shopping-cart">
+            <thead>
+                <tr>
+                    <th class="image">&nbsp;</th>
+                    <th>Pattern</th>
+                    <th>Note</th>
+                    <th>Public</th>
+                    <th>Make Changes</th>
+                    <th>Delete Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="note in notes" class="cart-item">
+                    <td class="image"><a href="#"><img v-bind:src="note.image" alt=""></a></td>
+                    <td><a v-bind:href=" '/patterns/' + note.pattern_id">{{note.pattern_name}}</a></td>
+                    <td><textarea v-if="userId !== 0" class="form-control" id="exampleFormControlTextarea1" v-model="note.body" placeholder="New Note" rows="3"></textarea></td>
+                    <td><div class="form-check">
+                          <input class="form-check-input" type="checkbox" v-model="note.public" value="note.public" id="defaultCheck1">
+                          <label class="form-check-label" for="defaultCheck1">
+                            Public
+                          </label>
+                        </div></td>
+                    <td class="add"><a href="#x" v-on:click="editNote(note.id, note.body, note.public)" class="btn btn-success-filled √-add">√</a></td>
+                    <td class="remove"><a href="#x" v-on:click="destroyNote(note.id)" class="btn btn-danger-filled x-remove">×</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- / shopping cart table -->
 
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" v-model="note.public" value="note.public" id="defaultCheck1">
-              <label class="form-check-label" for="defaultCheck1">
-                Public
-              </label>
-            </div>
+    </div><!-- / container -->
+</div>
 
-            <button  v-if="userId !== 0" type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="makeNote(pattern.id, userId)">Confirm Note Changes</button>
-          </div>
-      </form>
 
-            <div class="card-body">
-              <router-link class="btn btn-warning m-1" v-bind:to=" '/patterns/' + note.pattern_id ">To Pattern</router-link>
-              <!-- <button type="submit" class="btn btn-warning m-1" v-on:click="editNote(note.id)">Edit Note</button> -->
-              <button type="submit" class="btn btn-warning m-1" v-on:click="destroyNote(note.id)">Delete Note</button>
-            </div>
-
-          </div>
-        </div>
 
   </div>
 </template>
@@ -51,8 +56,6 @@ export default {
   data: function() {
     return {
       notes: [],
-      new_note: "",
-      public: false,
       userId: 0
     };
   },
@@ -67,6 +70,16 @@ export default {
 
   },
   methods: { 
+            editNote: function(edit_id, n_body, n_public) {
+                  console.log("editing note");
+                  var params = { 
+                                    body: n_body,
+                                    public: n_public
+                                 };
+                  axios.patch("/api/notes/" + edit_id, params).then(response => {
+                                  this.$router.push("/notes/");
+                  });
+                },
             destroyNote: function(remove_id) {
                   console.log("deleting note");
                   axios.delete("/api/notes/" + remove_id).then(response => {

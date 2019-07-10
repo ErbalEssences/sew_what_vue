@@ -87,7 +87,7 @@
 <!-- shop right-sidebar -->
 <section id="shop" class="space-top-30">
     <div class="container">
-      <ul class="pagination">
+      <ul v-if="patterns[0]" class="pagination">
         <template v-for="number in patterns[0].numbers">
           <li v-if="number == '...' && number != pageNumber" class="disabled"><a>{{number}}</a></li>
           <li v-if="number == pageNumber" class="active"><a>{{number}}</a></li>
@@ -129,16 +129,23 @@
                               <img  v-if="pattern.images.main_images[0]" v-bind:src="pattern.images.main_images[0].url" alt="">
                               <img  v-else v-bind:src="closet_photo" alt="No Photo">
 
-                              <!-- / product-image -->
 
-                              <!-- product-hover-tools -->
                               <div class="product-hover-tools">
                                   <a v-bind:href="'/patterns/' + pattern.id" class="view-btn" data-toggle="tooltip" title="View Product">
                                       <i class="lnr lnr-eye"></i>
                                   </a>
-                                  <a href="shopping-cart.html" class="cart-btn" data-toggle="tooltip" title="Add to Cart">
-                                      <i class="lnr lnr-cart"></i>
+                              <span v-if="userId !== 0" class="dropdown">
+                                  <a v-if="userId !== 0" class="cart-btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <i class="lnr lnr-envelope"></i>
                                   </a>
+                                    <div v-if="userId !== 0" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                      <div v-for="closet in user.closets">
+                                        <a v-on:click="addToCloset(closet.id, pattern.id)" class="dropdown-item" href="#">{{closet.name}}</a>
+                                      </div>
+                                    </div>
+                                    
+                                </span>
+
                               </div><!-- / product-hover-tools -->
                               <!-- product-details -->
                               <div class="product-details">
@@ -155,21 +162,13 @@
                     <!-- / sizer -->
                 </ul> <!-- / products -->
 
-
-<!--  class="active" -->
-<!-- class="disabled" -->
-                <ul class="pagination">
+                <ul v-if="patterns[0]" class="pagination">
                   <template v-for="number in patterns[0].numbers">
                     <li v-if="number == '...' && number != pageNumber" class="disabled"><a>{{number}}</a></li>
                     <li v-if="number == pageNumber" class="active"><a>{{number}}</a></li>
                     <li v-if="number != '...' && number != pageNumber" v-on:click="sendNumber(number)"><a>{{number}}</a></li>
                   </template>
                 </ul>
-
-<!--                 <div class="text-center more-button space-top-30">
-                    <a href="#x" class="btn btn-default-filled"><i class="lnr lnr-sync"></i><span>LOAD MORE</span></a>
-                </div> -->
-
             </div><!-- / content-area -->
 
 
@@ -185,80 +184,11 @@
                       <div class="column filter-button">
                       </div><!-- / filter-button -->
                   <div class=" column range-values">
-                      <p>$<span class="value" id="range-slider-value-min"></span> - $<span class="value" id="range-slider-value-max"></span></p>
+                      <p>$<span class="value" id="range-slider-value-min"></span> - $<span v-on:change="priceHigh = $event" class="value" id="range-slider-value-max"></span></p>
                   </div><!-- / range-values -->
               </div><!-- / range-filter -->
               <!-- / filter-by-price widget -->
           </div>
-
-<!-- <template>
-  <v-card flat color="transparent">
-    <v-subheader>Min and max default slider</v-subheader>
-
-    <v-card-text>
-      <v-layout row>
-        <v-flex class="pr-3">
-          <v-slider
-            v-model="slider"
-            :max="max"
-            :min="min"
-          ></v-slider>
-        </v-flex>
-
-        <v-flex shrink style="width: 60px">
-          <v-text-field
-            v-model="slider"
-            class="mt-0"
-            hide-details
-            single-line
-            type="number"
-          ></v-text-field>
-        </v-flex>
-      </v-layout>
-    </v-card-text>
-
-    <v-subheader>Min and max range slider</v-subheader>
-
-    <v-card-text>
-      <v-layout row>
-        <v-flex
-          shrink
-          style="width: 60px"
-        >
-          <v-text-field
-            v-model="range[0]"
-            class="mt-0"
-            hide-details
-            single-line
-            type="number"
-          ></v-text-field>
-        </v-flex>
-        <v-flex class="px-3">
-          <v-range-slider
-            v-model="range"
-            :max="max"
-            :min="min"
-          ></v-range-slider>
-        </v-flex>
-        <v-flex
-          shrink
-          style="width: 60px"
-        >
-          <v-text-field
-            v-model="range[1]"
-            class="mt-0"
-            hide-details
-            single-line
-            type="number"
-          ></v-text-field>
-        </v-flex>
-      </v-layout>
-    </v-card-text>
-  </v-card>
-</template> -->
-
-
-
 
                 <!-- price-filter widget -->
                 <div class="price-filter widget">
@@ -424,7 +354,7 @@ export default {
     };
   },
   created: function() {
-                    this.userId = localStorage.getItem("userId");
+                    this.userId = localStorage.getItem("userId"); 
 
                     axios.get("/api/patterns").then(response => {
                       this.patterns = response.data;
@@ -442,10 +372,10 @@ export default {
       reloadPatterns: function() {
 
                     console.log("Creating search...");
-                    console.log(this.tagList);
+                    console.log(this.priceLow);
+                    console.log(this.priceHigh);
                     if (this.priceLow === 0) {
                       var priceLow = null;
-                      var priceHigh = null;
                     }
                     else {
                       var priceLow = this.priceLow;
@@ -546,7 +476,6 @@ export default {
     limitSlider.noUiSlider.on('update', function( values, handle ){
         (handle ? limitFieldMax : limitFieldMin).innerHTML = values[handle];
     });
-
 
   },
   mixins: [Vue2Filters.mixin]

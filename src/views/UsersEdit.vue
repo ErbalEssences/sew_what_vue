@@ -6,120 +6,59 @@
     <div class="container">
         <div class="row">
             <!-- login form 1 -->
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <div id="login-form">
                     <h3 class="log-title">EDIT USER</h3>
+                      <ul>
+                        <li class="text-danger" v-for="error in errors">{{ error }}</li>
+                      </ul>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="username" placeholder="USERNAME" required data-error="*Please fill out this field">
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" id="password" placeholder="PASSWORD" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <!-- log-line -->
-                    <div class="log-line">
-                        <div class="pull-left">
-                            <div class="checkbox checkbox-primary space-bottom">
-                                <label class="hide"><input type="checkbox"></label>
-                                <input id="checkbox1" type="checkbox">
-                                <label for="checkbox1"><span><strong>Remember Me</strong></span></label>
-                            </div>
-                        </div>
+                        <form v-on:submit.prevent="submit()">
+                          <div class="form-group">
+                            Username: <input type="text"  class="form-control" v-model="username">
+                          </div>
+
+                          <div class="form-group">
+                            Email: <input type="email" class="form-control" id="email" v-model="email" required>
+                          </div>
+
+                          <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle m-2 btn btn-md btn-primary btn-log btn-rounded" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{skill}}
+                            </button>
+                              <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+                                <div v-for="level in skillLevels">
+                                  <span v-on:click="skill = level" class="dropdown-item" href="#">{{level}}</span>
+                                </div>
+                              </div>
+                          </div>
+
+                          <div class="form-group">
+
+                            Profile Image: <input class="form-group btn-secondary dropdown-toggle m-2 btn btn-md btn-primary btn-log btn-rounded" type="file" v-on:change="setFile($event)" ref="fileInput">
+                          </div>
+                          
+                      <div class="log-line">
                         <div class="pull-right">
-                            <a href="my-account.html" class="btn btn-md btn-primary-filled btn-log btn-rounded">Log In</a>
-                            <div id="msgSubmit" class="h3 text-center hidden"></div>
-                            <div class="clearfix"></div>
+                          <!-- <input type="submit" value="Update User"> -->
+                          <button class="btn btn-md btn-primary-filled btn-log btn-rounded" v-on:click="submit()">Update User</button>
+                          <button class="btn btn-md btn-primary-filled btn-log btn-rounded" v-on:click="destroyUser()">Delete User</button>
+                          </div>
                         </div>
-                    </div><!-- / log-line -->
-                    <a href="#x" class="forgot-password">Forgot your Password?</a>
+
+                        </form>
+                    </div>
+
+
                 </div>
             </div><!-- / col-sm-6 -->
             <!-- / login form 1 -->
 
-            <!-- register form 1 -->
-            <div class="col-sm-6">
-                <div id="register-form">
-                    <h3 class="log-title">REGISTER</h3>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="register-email" placeholder="EMAIL" required data-error="*Please fill out this field">
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" id="register-username" placeholder="USERNAME" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="register-password" placeholder="PASSWORD" required data-error="*Please fill out this field">
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" class="form-control" id="register-cpassword" placeholder="CONFIRM PASSWORD" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <!-- log-line -->
-                    <div class="log-line reg-form-1 no-margin">
-                        <div class="pull-left">
-                            <div class="checkbox checkbox-primary space-bottom">
-                                <label class="hide"><input type="checkbox"></label>
-                                <input id="checkbox2" type="checkbox">
-                                <label for="checkbox2"><span><a href="#x">Terms & Conditions</a></span></label>
-                            </div>
-                        </div>
-                        <div class="pull-right">
-                            <button type="submit" id="reg-submit" class="btn btn-md btn-primary-filled btn-log btn-rounded">Register</button>
-                            <div id="register-msgSubmit" class="h3 text-center hidden"></div>
-                            <div class="clearfix"></div>
-                        </div>
-                    </div><!-- / log-line -->
-                </div>
-            </div><!-- / col-sm-6 -->
             <!-- / register form 1 -->
         </div><!-- / row -->
         <!-- / form 1 -->
     </div><!-- / container -->
 </section>
-
-
-
-
-
-    <h1>Edit user</h1>
-    <ul>
-      <li v-for="error in errors">
-        {{ error }}
-      </li>
-    </ul>
-
-    <form v-on:submit.prevent="submit()">
-      <div>
-        Username: <input v-model="user.username">
-      </div>
-
-      <div>
-        Email: <input v-model="user.email">
-      </div>
-      <div>
-        Profile Image: <input type="file" v-on:change="setFile($event)" ref="fileInput">
-      </div>
-
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle m-2" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{user.skill}}
-        </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <div v-for="level in skillLevels">
-              <a v-on:click="skill = level" class="dropdown-item" href="#">{{level}}</a>
-            </div>
-          </div>
-      </div>
-  
-      <!-- <input type="submit" value="Update User"> -->
-      <button class="btn btn-warning m-1" v-on:click="submit()">Update User</button>
-      <button class="btn btn-warning m-1" v-on:click="destroyUser()">Delete User</button>
-
-    </form>
-
 
 
   </div>
@@ -209,11 +148,9 @@ export default {
   created: function() {
     axios.get("/api/users/" + this.$route.params.id ).then(response => {
       this.user = response.data;
-      this.image = response.data.avatar;
       this.username = response.data.username;
       this.email = response.data.email;
       this.skill = response.data.skill;
-      this.avatar_url = response.data.avatar_url;
     });
   },
   methods: {
@@ -223,11 +160,12 @@ export default {
           }
         }, 
     submit: function() {
+      console.log(this.username);
+      console.log(this.email);
       var formData = new FormData();
       formData.append("username", this.username);
       formData.append("email", this.email);
       formData.append("skill", this.skill);
-      formData.append("avatar_url", this.avatar_url);
       formData.append("avatar", this.image);
 
       // var params = {

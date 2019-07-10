@@ -143,24 +143,25 @@
                           <div v-if="userId !== 0">
                             <!-- CLEAN UP -->
                               <div v-if="userId !== 0" class="dropdown">
-                                <button v-if="userId !== 0" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button v-if="userId !== 0" class="btn btn-primary-filled btn-rounded dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Add to Closet
                                 </button>
-
-                                  <div v-if="userId !== 0" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                  <div v-if="userId !== 0" class="dropdown-menu " aria-labelledby="dropdownMenuButton">
                                     <div v-for="closet in user.closets">
                                       <a v-on:click="addToCloset(pattern.id, closet.id)" class="dropdown-item" href="#">{{closet.name}}</a>
                                     </div>
                                   </div>
+                              </div>
+                                <p>---------------------------------------------------------------------------------------</p>
                                   <h4 v-if="userId !== 0" >Make New Closet and Add</h4>
-                                  <form  v-if="userId !== 0"  class="form-inline">
-                                    <div  v-if="userId !== 0"  class="form-group mx-sm-1 mb-3">
+                                    <div  v-if="userId !== 0"  class="form-group">
                                       <label  v-if="userId !== 0"  for="inputname2" class="sr-only">Name</label>
                                       <input  v-if="userId !== 0"  class="form-control" v-model="new_name" placeholder="Closet Name">
+                                    <!-- </div>
+                                    <div> -->
+                                      <button  v-if="userId !== 0" class="btn btn-primary-filled btn-rounded" v-on:click="makeCloset(pattern.id)">Confirm Closet</button>
                                     </div>
-                                    <button  v-if="userId !== 0" type="submit" class="btn btn-primary mx-sm-1 mb-3" v-on:click="makeCloset(pattern.id)">Confirm Closet</button>
-                                  </form>
-                              </div>
+                              
 
                           </div>
                           <div v-else>Please sign in to use these features.</div>
@@ -185,20 +186,21 @@
                                   <img src="images/author2.jpg" alt="">
                                 </div>
                                 <div class="review-content">
-                                    <h4 class="review-title no-margin">Very good product!</h4>
+                                    <h4 class="review-title no-margin">Loved it!</h4>
                                     <div class="review-stars">
                                         <span class="product-rating">
                                             <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star"></i> <i class="fa fa-star-o"></i>
                                         </span>
                                     </div>
-                                    <p>Morbi sodales ornare ex, at consectetur ipsum faucibus at. Ut facilisis orci metus, vitae hendrerit leo vulputate sit amet.</p>
+                                    <p>Loved this pattern! Looks so good on.</p>
                                     <cite> - Jane Doe</cite>
                                 </div>
 
                               <div v-for="note in pattern.private_notes">
 
                                 <div class="review-author pull-left">
-                                  <img v-bind:src="note.user.avatar_url" alt="">
+                                  <img v-if="note.user" v-bind:src="note.user.avatar" alt="">
+
                                 </div>
                                 <div class="review-content">
                                     <h4 class="review-title no-margin">Amazing product!</h4>
@@ -265,7 +267,7 @@
                 <div class="product-sidebar-details">
                     <h4>{{ pattern.name }}</h4>
                     <h5>{{ pattern.display_name }}</h5>
-                    <h5>{{ pattern.brand[0].name }}</h5>
+                    <h5 v-if="pattern.brand[0]">{{ pattern.brand[0].name }}</h5>
                     <p>{{ pattern.description }}</p>
                     <div class="product-info">
                         <div class="info">
@@ -281,7 +283,7 @@
                         <div class="info">
                           <p><i class="lnr lnr-file-empty"></i><span>Out of Print: {{pattern.out_of_print}}</span></p>
                         </div>
-                        <div class="info">
+                        <div v-if="pattern.difficulty[0]" class="info">
                             <p><i class="lnr lnr-menu"></i><span>Sewing Rating: {{pattern.difficulty[0].name}}</span></p>
                         </div>
                         <div class="info">

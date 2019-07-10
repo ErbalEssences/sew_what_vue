@@ -23,15 +23,14 @@
                 </div>
                 <div class="navbar-collapse collapse text-center">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="/"><span>HOME</span></a></li>
-                        <li><a href="about.html"><span>ABOUT</span></a></li>
+                        <li><a href="/"><span>HOME</span></a></li>
 
                         <li><a href="/patterns/"><span>PATTERNS</span></a></li>
                         </li>
                         <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>LOGIN</span> <span class="dropdown-icon"></span></a>
                         <ul class="dropdown-menu animated zoomIn fast">
-                            <li><a href="/signup"><span>SIGNUP</span></a></li>
+                            <!-- <li><a href="/signup"><span>SIGNUP</span></a></li> -->
                             <li><a href="/login"><span>LOGIN</span></a></li>
                             <li><a href="/logout"><span>LOGOUT</span></a></li>
                         </ul>
@@ -40,9 +39,9 @@
                         <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span>SHOP</span> <span class="dropdown-icon"></span></a>
                         <ul class="dropdown-menu animated zoomIn fast">
-                        <li><a href="shop.html"><span>BUTTERICK</span></a></li>
-                        <li><a href="shop-right.html"><span>MCCALLS</span></a></li>
-                        <li><a href="shop-left.html"><span>VOGUE</span></a></li>
+                        <li><a href="https://butterick.mccall.com/"><span>BUTTERICK</span></a></li>
+                        <li><a href="https://mccallpattern.mccall.com/"><span>MCCALLS</span></a></li>
+                        <li><a href="https://voguepatterns.mccall.com/patterns"><span>VOGUE</span></a></li>
                     </ul>
                     </li>
                         <!-- <li><a href="contact.html"><span>USER PAGE</span></a></li> -->
@@ -184,7 +183,7 @@ export default {
     data: function() {
       return {
         titleFilter: "",
-        userId: 0
+        userId: null
       };
     },
   created: function() {
